@@ -9,6 +9,8 @@ $config.LogPath
 . "$PSScriptRoot/scripts/cleanup.ps1"
 
 
-Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath
+# Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath
+
+Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
 
 # Invoke-UnzipFlow -BuildPath $config.BuildPath
