@@ -3,3 +3,4 @@ logs/
 *.zip
 *.tmp
 *.bak
+config.json
