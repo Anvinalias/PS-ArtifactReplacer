@@ -7,20 +7,26 @@ $config.LogPath
 # Load helper script
 . "scripts/unzip.ps1"
 
-# # Example path to pass
-# $versionFolder = "C:\Users\anvin\Desktop\Practice\Experiment\Compute_hash\Buildfiles\CrewingPALApp\4.0.0.3"
+# Get all application folders under BuildPath
+$appFolders = Get-ChildItem -Path $config.BuildPath -Directory
 
-# Define the app name and version dynamically
-$appName = "CrewingPALApp"
-$version = "4.0.0.3"
+foreach ($app in $appFolders) {
+    # Get version folders inside each app folder
+    $versionFolders = Get-ChildItem -Path $app.FullName -Directory
 
-# Combine parts to get full version folder path
-$versionFolder = Join-Path $config.BuildPath "$appName\$version"
+    foreach ($version in $versionFolders) {
+        # Prompt the user to continue or skip
+        Write-Host "`nFound version folder: $($version.FullName)" -ForegroundColor Cyan
+        $response = Read-Host "Do you want to process this folder? (Y/N)"
 
-# Output to check
-Write-Host "Version folder path: $versionFolder"
+        if ($response -eq "Y" -or $response -eq "y") {
+            # Call your unzip function here
+            Unzip -VersionFolderPath $version.FullName
+        } else {
+            Write-Host "Skipping $($version.Name)`n" -ForegroundColor Yellow
+        }
+    }
+}
 
-# Call the Unzip function
-Unzip -VersionFolderPath $versionFolder
 
 
