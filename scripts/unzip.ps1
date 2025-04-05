@@ -1,4 +1,4 @@
-function Unzip {
+function Expand-BuildFiles {
     param (
         [Parameter(Mandatory = $true)]
         [string]$VersionFolderPath

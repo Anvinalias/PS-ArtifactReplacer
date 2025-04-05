@@ -21,7 +21,7 @@ foreach ($app in $appFolders) {
 
         if ($response -eq "Y" -or $response -eq "y") {
             # Call your unzip function here
-            Unzip -VersionFolderPath $version.FullName
+            Expand-BuildFiles -VersionFolderPath $version.FullName
         } else {
             Write-Host "Skipping $($version.Name)`n" -ForegroundColor Yellow
         }
