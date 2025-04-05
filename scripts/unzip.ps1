@@ -3,27 +3,34 @@ function Unzip {
         [Parameter(Mandatory = $true)]
         [string]$VersionFolderPath
     )
-
-    # Make sure the folder exists
-    if (-not (Test-Path $VersionFolderPath)) {
-        Write-Host "Folder does not exist: $VersionFolderPath" -ForegroundColor Red
+    try {
+        # Try to get all zip files 
+        $zipFiles = Get-ChildItem -Path $VersionFolderPath -Filter *.zip -ErrorAction Stop
+    }
+    catch {
+        Write-Host "Error: Folder does not exist or couldn't read contents: $VersionFolderPath" -ForegroundColor Red
         return
     }
-
-    # Get all zip files in the folder
-    $zipFiles = Get-ChildItem -Path $VersionFolderPath -Filter *.zip
 
     foreach ($zip in $zipFiles) {
         $destinationFolder = Join-Path $VersionFolderPath ($zip.BaseName)
 
-        # Create folder if it doesn't exist
-        if (-not (Test-Path $destinationFolder)) {
-            New-Item -ItemType Directory -Path $destinationFolder | Out-Null
+        try {
+            
+            if (-not (Test-Path $destinationFolder)) {
+                New-Item -ItemType Directory -Path $destinationFolder -ErrorAction Stop | Out-Null
+            }
+
+            # Unzip into destination folder
+            Expand-Archive -Path $zip.FullName -DestinationPath $destinationFolder -Force
+
+            Write-Host "Unzipped $($zip.Name) to $destinationFolder"
+
         }
-
-        # Unzip into destination folder
-        Expand-Archive -Path $zip.FullName -DestinationPath $destinationFolder -Force
-
-        Write-Host "Unzipped $($zip.Name) to $destinationFolder"
+        catch {
+            Write-Host "Failed to unzip $($zip.Name): $_" -ForegroundColor Yellow
+        }
+    
     }
+
 }
