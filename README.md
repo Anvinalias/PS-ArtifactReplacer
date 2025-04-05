@@ -1,0 +1,1 @@
+A project to learn Powershell by automating the process of replacing artifact files with build files.
