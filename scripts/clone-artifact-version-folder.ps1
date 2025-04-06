@@ -16,6 +16,19 @@ function Test-VersionMatch {
     return $versionContent -eq $actualVersion
 }
 
+function Clone-VersionFolder {
+    param (
+        [string]$SourceFolder,
+        [string]$NewVersion
+    )
+    $parent = Split-Path $SourceFolder -parent
+    $targetFolderPath = Join-Path $parent $NewVersion
+    Write-Host "Cloning $SourceFolder to $targetFolderPath" -ForegroundColor Green
+    #clone old version folder 1.0.0.0 to new version folder 4.0.0.0
+    Copy-Item -Path $SourceFolder -Destination $targetFolderPath -Recurse -Force
+    return $newFolderPath
+}
+
 Function Invoke-ArtifactVersionClone {
     param (
         [Parameter(Mandatory)]
@@ -53,6 +66,8 @@ Function Invoke-ArtifactVersionClone {
             Write-Host "Skipping $appName : version.txt mismatch" -ForegroundColor Red
             continue
         }
+
+        $targetVersionFolder = Clone-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
     }
     
 }
