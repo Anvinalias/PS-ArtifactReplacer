@@ -21,13 +21,18 @@ function Clone-VersionFolder {
         [string]$SourceFolder,
         [string]$NewVersion
     )
-    $parent = Split-Path $SourceFolder -parent
-    $targetFolderPath = Join-Path $parent $NewVersion
-    Write-Host "Cloning $SourceFolder to $targetFolderPath" -ForegroundColor Green
-    #clone old version folder 1.0.0.0 to new version folder 4.0.0.0
-    Copy-Item -Path $SourceFolder -Destination $targetFolderPath -Recurse -Force
+
+    $targetFolderPath = Join-Path (Split-Path $SourceFolder -Parent) $NewVersion
+
+    if (-not (Test-Path $targetFolderPath)) {
+        New-Item -Path $targetFolderPath -ItemType Directory | Out-Null
+    }
+    #clone the folder 1.0.0.0 to new version folder 4.0.0.0
+    robocopy $SourceFolder $targetFolderPath /E /COPY:DAT /R:2 /W:1 | Out-Null
+
     return $targetFolderPath
 }
+
 
 function Update-VersionTxt {
     param (

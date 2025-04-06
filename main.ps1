@@ -13,4 +13,4 @@ $config = Get-Content -Raw -Path "./config.json" | ConvertFrom-Json
 
 # Invoke-BuildFileExpansion -BuildPath $config.BuildPath
 
-# Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
+Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
