@@ -1,26 +1,65 @@
-A project to learn Powershell by automating the process of replacing artifact files with build files.
+# 🔄 PowerShell Artifact Replacer
 
-This is a small project based on one of our internal activities that involves a set of tasks following a repetitive template. As such, the conditions and practices used here may not be suitable for real-world scenarios. The purpose of this project is to automate that specific process under defined conditions and to give me space to experiment along the way.
-The project is entirely focused on the Windows environment, as that's where these files are hosted.
+A project to **learn PowerShell** by automating the process of replacing artifact files with build files.
 
-Steps to note: 
+---
 
-1. Make sure to create a config.json file and add corresponding paths as given in config.example.json file or you can rename config.example.json to config.json and add paths accordingly.
+## 📘 About This Project
 
-2. If you have 7-zip installed specify it in config.json. This can reduce unzip time significantly.
+This is a small project based on one of our internal activities that involves a set of tasks following a **repetitive template**.  
+As such, the conditions and practices used here may **not be suitable for real-world scenarios**.
 
-Observations & Optimization:
+The purpose of this project is:
 
-1. Replacing builtin Copy-Items cmdlet with robocopy for folder cloning saved almost 3 minutes
+- To **automate** a specific, repetitive process under defined conditions.
+- To provide a space for **experimenting and learning PowerShell**.
+- Fully focused on the **Windows environment**, as that's where these files are hosted.
 
-2. Using 7-zip instead of Expand-Archive cmdlet reduced the unzipping time by 2 minutes.
-Still Expand-Archive is used if 7-zip is not available.
+---
 
+## ⚙️ Setup Instructions
 
-Some commands that helped me to rollback while debugging:
+1. **Create a `config.json` file** in the root directory.
+   - Use the `config.example.json` file as a reference.
+   - You can simply rename `config.example.json` to `config.json` and update the paths accordingly.
 
-1. Delete version folder 4.0.0.0, if cloned from 1.0.0.0 (replace "$ArtifactFilesPath" with correct path, example: "C:\project\artifacts\*\4.0.0.0")
+2. **Specify 7-Zip path (optional but recommended):**
+   - If you have 7-Zip installed, add its path in the config.
+   - This can **significantly reduce unzip time**.
+
+---
+
+## 🚀 Optimizations & Observations
+
+| Optimization                            | Impact                                      |
+|----------------------------------------|---------------------------------------------|
+| ✅ Replaced `Copy-Item` with `robocopy` | Saved ~3 minutes during folder cloning      |
+| ✅ Used `7-Zip` over `Expand-Archive`   | Reduced unzipping time by ~2 minutes        |
+
+> `Expand-Archive` is used as a fallback if 7-Zip is not available.
+
+---
+
+## 🧹 Useful Rollback Commands (for Debugging)
+
+### 🔁 Delete a version folder (example: 4.0.0.0 cloned from 1.0.0.0)
+
+```powershell
 Remove-Item -Path "$ArtifactFilesPath\*\4.0.0.0" -Recurse -Force
+```
 
-2. Delete Unzipped buildfiles (replace "$BuildFilesPath" with correct path, example: "C:\project\buildfiles")
-Get-ChildItem -Path "$BuildFilesPath" -Recurse -Directory | Where-Object { Test-Path (Join-Path $_.Parent.FullName "$($_.Name).zip") } | Remove-Item -Recurse -Force
+> Replace the path with your actual ArtifactFilesPath
+> `Example:` C:\project\artifacts\*\4.0.0.0
+
+### 🗑️ Delete unzipped build files (when .zip exists in the same directory)
+```powershell
+Get-ChildItem -Path "C:\project\buildfiles" -Recurse -Directory |
+Where-Object { Test-Path (Join-Path $_.Parent.FullName "$($_.Name).zip") } |
+Remove-Item -Recurse -Force
+```
+> Replace "C:\project\buildfiles" with your actual BuildFilesPath
+> ```Example:``` C:\project\artifacts\*\4.0.0.0
+
+
+
+
