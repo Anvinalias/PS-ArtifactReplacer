@@ -39,7 +39,7 @@ function Update-VersionTxt {
         [string]$FolderPath,
         [string]$NewVersion
     )
-    $versionFile = Join-Path $FolderPath "version.txt"
+    $versionFile = Join-Path $FolderPath "applicationPages\version.txt"
     Write-Host "Updating version.txt in $FolderPath to $NewVersion" -ForegroundColor Green
     #Modify version.txt to new version
     Set-Content -Path $versionFile -Value $NewVersion
