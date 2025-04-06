@@ -1,7 +1,10 @@
 function Expand-BuildFiles {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$VersionFolderPath
+        [string]$VersionFolderPath,
+
+        [Parameter(Mandatory = $false)]
+        [string]$SevenZipPath
     )
     try {
         # Try to get all zip files 
@@ -21,10 +24,15 @@ function Expand-BuildFiles {
                 New-Item -ItemType Directory -Path $destinationFolder -ErrorAction Stop | Out-Null
             }
 
-            # Unzip into destination folder
-            Expand-Archive -Path $zip.FullName -DestinationPath $destinationFolder -Force
-
-            Write-Host "Unzipped $($zip.Name) to $destinationFolder"
+            # Unzip into destination folder using 7-Zip if available, otherwise use Expand-Archive
+            if ($SevenZipPath) {
+                & $SevenZipPath 'x' $zip.FullName "-o$destinationFolder" '-y' | Out-Null
+                Write-Host "Unzipped $($zip.Name) using 7-Zip to $destinationFolder"
+            }
+            else {
+                Expand-Archive -Path $zip.FullName -DestinationPath $destinationFolder -Force
+                Write-Host "Unzipped $($zip.Name) using Expand-Archive to $destinationFolder"
+            }
 
         }
         catch {
@@ -38,7 +46,10 @@ function Expand-BuildFiles {
 function Invoke-BuildFileExpansion {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$BuildPath
+        [string]$BuildPath,
+
+        [Parameter(Mandatory = $false)]
+        [string]$SevenZipPath
     )
     
     # Get all application folders under BuildPath
@@ -50,16 +61,16 @@ function Invoke-BuildFileExpansion {
 
         foreach ($version in $versionFolders) {
             # Prompt the user to continue or skip
-            Write-Host "`nFound version folder: $($version.FullName)" -ForegroundColor Cyan
-            $response = Read-Host "Do you want to process this folder? (Y/N)"
+            # Write-Host "`nFound version folder: $($version.FullName)" -ForegroundColor Cyan
+            # $response = Read-Host "Do you want to process this folder? (Y/N)"
 
-            if ($response -in @("Y", "y")) {
+            # if ($response -in @("Y", "y")) {
                 # Call your unzip function here
-                Expand-BuildFiles -VersionFolderPath $version.FullName
-            }
-            else {
-                Write-Host "Skipping $($version.Name)`n" -ForegroundColor Yellow
-            }
+                Expand-BuildFiles -VersionFolderPath $version.FullName -SevenZipPath $SevenZipPath
+            # }
+            # else {
+            #     Write-Host "Skipping $($version.Name)`n" -ForegroundColor Yellow
+            # }
         }
     }
 
