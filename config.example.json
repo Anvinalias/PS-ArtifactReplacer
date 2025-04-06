@@ -1,5 +1,7 @@
 {
     "BuildPath": "",
     "ArtifactPath": "",
-    "LogPath": ""
+    "LogPath": "",
+    "SourceVersion": "1.0.0.0",
+    "TargetVersion": "4.0.0.0"
   }

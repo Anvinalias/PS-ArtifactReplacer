@@ -14,4 +14,6 @@ $config.LogPath
 
 # Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
 
-Invoke-BuildFileExpansion -BuildPath $config.BuildPath
+# Invoke-BuildFileExpansion -BuildPath $config.BuildPath
+
+Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
