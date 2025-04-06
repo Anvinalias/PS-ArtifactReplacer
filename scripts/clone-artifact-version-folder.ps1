@@ -36,6 +36,7 @@ function Update-VersionTxt {
     )
     $versionFile = Join-Path $FolderPath "version.txt"
     Write-Host "Updating version.txt in $FolderPath to $NewVersion" -ForegroundColor Green
+    #Modify version.txt to new version
     Set-Content -Path $versionFile -Value $NewVersion
 }
 
@@ -79,6 +80,7 @@ Function Invoke-ArtifactVersionClone {
 
         $targetVersionFolder = Clone-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
         Write-Host "Cloned $sourceFolder to $targetVersionFolder" -ForegroundColor Green
+        #Update version.txt in the new version folder
         Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
     }
     
