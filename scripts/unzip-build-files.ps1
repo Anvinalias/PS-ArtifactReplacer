@@ -35,7 +35,7 @@ function Expand-BuildFiles {
 
 }  
 
-function Invoke-UnzipFlow {
+function Invoke-BuildFileExpansion {
     param (
         [Parameter(Mandatory = $true)]
         [string]$BuildPath

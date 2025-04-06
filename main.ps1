@@ -5,12 +5,12 @@ $config.BuildPath
 $config.LogPath
 
 # Load helper script
-. "$PSScriptRoot/scripts/unzip.ps1"
-. "$PSScriptRoot/scripts/cleanup.ps1"
+. "$PSScriptRoot/scripts/unzip-build-files.ps1"
+. "$PSScriptRoot/scripts/cleanup-artifact-files.ps1"
 
 
 # Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath
 
-Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
+# Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
 
-# Invoke-UnzipFlow -BuildPath $config.BuildPath
+Invoke-BuildFileExpansion -BuildPath $config.BuildPath
