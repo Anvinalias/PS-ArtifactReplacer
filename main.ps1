@@ -5,7 +5,7 @@ $config = Get-Content -Raw -Path "./config.json" | ConvertFrom-Json
 . "$PSScriptRoot/scripts/unzip-build-files.ps1"
 . "$PSScriptRoot/scripts/cleanup-artifact-files.ps1"
 . "$PSScriptRoot/scripts/clone-artifact-version-folder.ps1"
-
+. "$PSScriptRoot/scripts/copy-build-to-artifact.ps1"
 
 # Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath
 
@@ -13,4 +13,4 @@ $config = Get-Content -Raw -Path "./config.json" | ConvertFrom-Json
 
 # Invoke-BuildFileExpansion -BuildPath $config.BuildPath
 
-Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
+# Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
