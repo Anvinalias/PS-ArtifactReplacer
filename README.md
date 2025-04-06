@@ -3,4 +3,4 @@ A project to learn Powershell by automating the process of replacing artifact fi
 
 Steps to note: 
 
-Make sure to create a config.json file and add corresponding paths as given in config.example.json file.
+1. Make sure to create a config.json file and add corresponding paths as given in config.example.json file or you can rename config.example.json to config.json and add paths accordingly.
