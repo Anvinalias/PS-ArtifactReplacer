@@ -24,11 +24,12 @@ function Expand-BuildFiles {
                 New-Item -ItemType Directory -Path $destinationFolder -ErrorAction Stop | Out-Null
             }
 
-            # Unzip into destination folder using 7-Zip if available, otherwise use Expand-Archive
+            # Unzip into destination folder using 7-Zip if available
             if ($SevenZipPath) {
                 & $SevenZipPath 'x' $zip.FullName "-o$destinationFolder" '-y' | Out-Null
                 Write-Host "Unzipped $($zip.Name) using 7-Zip to $destinationFolder"
             }
+            # Fallback to Expand-Archive if 7-Zip is not available
             else {
                 Expand-Archive -Path $zip.FullName -DestinationPath $destinationFolder -Force
                 Write-Host "Unzipped $($zip.Name) using Expand-Archive to $destinationFolder"
@@ -60,17 +61,8 @@ function Invoke-BuildFileExpansion {
         $versionFolders = Get-ChildItem -Path $app.FullName -Directory
 
         foreach ($version in $versionFolders) {
-            # Prompt the user to continue or skip
-            # Write-Host "`nFound version folder: $($version.FullName)" -ForegroundColor Cyan
-            # $response = Read-Host "Do you want to process this folder? (Y/N)"
-
-            # if ($response -in @("Y", "y")) {
-                # Call your unzip function here
-                Expand-BuildFiles -VersionFolderPath $version.FullName -SevenZipPath $SevenZipPath
-            # }
-            # else {
-            #     Write-Host "Skipping $($version.Name)`n" -ForegroundColor Yellow
-            # }
+            # Call Expand-BuildFiles function for each version folder
+            Expand-BuildFiles -VersionFolderPath $version.FullName -SevenZipPath $SevenZipPath
         }
     }
 
