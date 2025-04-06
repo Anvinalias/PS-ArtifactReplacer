@@ -42,7 +42,7 @@ function Invoke-UnzipFlow {
     )
     
     # Get all application folders under BuildPath
-    $appFolders = Get-ChildItem -Path $config.BuildPath -Directory
+    $appFolders = Get-ChildItem -Path $BuildPath -Directory
 
     foreach ($app in $appFolders) {
         # Get version folders inside each app folder
@@ -53,7 +53,7 @@ function Invoke-UnzipFlow {
             Write-Host "`nFound version folder: $($version.FullName)" -ForegroundColor Cyan
             $response = Read-Host "Do you want to process this folder? (Y/N)"
 
-            if ($response -eq "Y" -or $response -eq "y") {
+            if ($response -in @("Y", "y")) {
                 # Call your unzip function here
                 Expand-BuildFiles -VersionFolderPath $version.FullName
             }

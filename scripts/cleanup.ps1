@@ -38,7 +38,7 @@ function Remove-OldHashFiles {
         if (Test-Path $hashFilePath) {
             Write-Host "`nHash file found: $hashFilePath" -ForegroundColor Cyan
             $response = Read-Host "Do you want to delete this hash file? (Y/N)"
-            if ($response -eq "Y" -or $response -eq "y") {
+            if ($response -in @("Y", "y")) {
                 try {
                     Remove-Item $hashFilePath -Force
                     Write-Host "Deleted hash file: $hashFilePath" -ForegroundColor Green
