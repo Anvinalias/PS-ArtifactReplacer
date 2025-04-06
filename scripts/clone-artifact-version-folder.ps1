@@ -26,7 +26,17 @@ function Clone-VersionFolder {
     Write-Host "Cloning $SourceFolder to $targetFolderPath" -ForegroundColor Green
     #clone old version folder 1.0.0.0 to new version folder 4.0.0.0
     Copy-Item -Path $SourceFolder -Destination $targetFolderPath -Recurse -Force
-    return $newFolderPath
+    return $targetFolderPath
+}
+
+function Update-VersionTxt {
+    param (
+        [string]$FolderPath,
+        [string]$NewVersion
+    )
+    $versionFile = Join-Path $FolderPath "version.txt"
+    Write-Host "Updating version.txt in $FolderPath to $NewVersion" -ForegroundColor Green
+    Set-Content -Path $versionFile -Value $NewVersion
 }
 
 Function Invoke-ArtifactVersionClone {
@@ -68,6 +78,8 @@ Function Invoke-ArtifactVersionClone {
         }
 
         $targetVersionFolder = Clone-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
+        Write-Host "Cloned $sourceFolder to $targetVersionFolder" -ForegroundColor Green
+        Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
     }
     
 }
