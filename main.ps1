@@ -11,6 +11,6 @@ $config = Get-Content -Raw -Path "./config.json" | ConvertFrom-Json
 
 # Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
 
-Invoke-BuildFileExpansion -BuildPath $config.BuildPath -SevenZipPath $config.SevenZipPath
+#Invoke-BuildFileExpansion -BuildPath $config.BuildPath -SevenZipPath $config.SevenZipPath
 
-# Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
+Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion

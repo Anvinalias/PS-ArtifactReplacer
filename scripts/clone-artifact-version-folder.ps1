@@ -60,33 +60,38 @@ Function Invoke-ArtifactVersionClone {
         [string]$TargetVersion
     )
 
-    # Get only app folders that exist in the BuildPath
-    $buildAppFolders = Get-ChildItem -Path $BuildPath -Directory
- 
-    foreach ($buildApp in $buildAppFolders) {
-        $appName = $buildApp.Name
-        $artifactAppPath = Join-Path $ArtifactPath $appName
+   # Get all app folders in the ArtifactPath
+$artifactAppFolders = Get-ChildItem -Path $ArtifactPath -Directory
+$buildAppFolders = Get-ChildItem -Path $BuildPath -Directory
+$buildAppNames = $buildAppFolders.Name
 
-        if (-not (Test-Path $artifactAppPath)) {
-            Write-Host "Skipping $appName : not found in ArtifactPath" -ForegroundColor Yellow
-            continue
-        }
+foreach ($artifactApp in $artifactAppFolders) {
+    $appName = $artifactApp.Name
+    $sourceFolder = Join-Path $artifactApp.FullName $SourceVersion
 
-        $sourceFolder = Join-Path $artifactAppPath $SourceVersion        
-        if (-not (Test-Path $sourceFolder)) {
-            Write-Host "Skipping $appName : Source version folder not found" -ForegroundColor Yellow
-            continue
-        }
-        
-        if (-not (Test-VersionMatch -FolderPath $sourceFolder)) {
-            Write-Host "Skipping $appName : version.txt mismatch" -ForegroundColor Red
-            continue
-        }
-
-        $targetVersionFolder = Clone-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
-        Write-Host "Cloned $sourceFolder to $targetVersionFolder" -ForegroundColor Green
-        #Update version.txt in the new version folder
-        Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
+    # Skip if source version folder doesn't exist
+    if (-not (Test-Path $sourceFolder)) {
+        Write-Host "Skipping $appName : Source version folder not found" -ForegroundColor Yellow
+        continue
     }
+
+    # Allow only if app exists in build or is API-Application
+    if ($appName -ne "API-Application" -and -not ($buildAppNames -contains $appName)) {
+        Write-Host "Skipping $appName : not found in BuildPath" -ForegroundColor Yellow
+        continue
+    }
+
+    # Ensure version.txt matches
+    if (-not (Test-VersionMatch -FolderPath $sourceFolder)) {
+        Write-Host "Skipping $appName : version.txt mismatch" -ForegroundColor Red
+        continue
+    }
+
+    # Clone and update version.txt
+    $targetVersionFolder = Clone-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
+    Write-Host "Cloned $sourceFolder to $targetVersionFolder" -ForegroundColor Green
+    Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
+}
+
     
 }
