@@ -16,7 +16,7 @@ function Test-VersionMatch {
     return $versionContent -eq $actualVersion
 }
 
-function Clone-VersionFolder {
+function Copy-VersionFolder {
     param (
         [string]$SourceFolder,
         [string]$NewVersion
@@ -88,7 +88,7 @@ foreach ($artifactApp in $artifactAppFolders) {
     }
 
     # Clone and update version.txt
-    $targetVersionFolder = Clone-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
+    $targetVersionFolder = Copy-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
     Write-Host "Cloned $sourceFolder to $targetVersionFolder" -ForegroundColor Green
     Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
 }
