@@ -2,7 +2,10 @@
 function Remove-UnwantedFiles {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$ArtifactPath
+        [string]$ArtifactPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$LogFile
     )
 
     $filesToDelete = @("allAppList.txt", "allfilesdetails.txt", "uploadedversion.txt")
@@ -12,11 +15,14 @@ function Remove-UnwantedFiles {
         if (Test-Path $filePath) {
             try {
                 Remove-Item $filePath -Force
-                Write-Host "Deleted $file" -ForegroundColor Green
+                Write-Log "Deleted $file" $LogFile
             }
             catch {
-                Write-Host "Failed to delete $file : $_" -ForegroundColor Red
+                Write-Log "Failed to delete $file : $_" $LogFile
             }
+        }
+        else {
+            Write-Log "$file not found" $LogFile
         }
     }
 }
@@ -28,7 +34,10 @@ function Remove-OldHashFiles {
         [string]$BuildPath,
 
         [Parameter(Mandatory = $true)]
-        [string]$ArtifactPath
+        [string]$ArtifactPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$LogFile
     )
 
     $appFolders = Get-ChildItem -Path $BuildPath -Directory
@@ -45,11 +54,14 @@ function Remove-OldHashFiles {
         if (Test-Path $hashFilePath) {
             try {
                 Remove-Item $hashFilePath -Force
-                Write-Host "Deleted hash file: $hashFilePath" -ForegroundColor Green
+                Write-Log "Deleted hash file from $appName" $LogFile
             }
             catch {
-                Write-Host "Failed to delete $hashFilePath : $_" -ForegroundColor Red
+                Write-Log "Failed to delete from $appName : $_" $LogFile
             }
+        }
+        else {
+            Write-Log "Hash file not found in $appName" $LogFile
         }
     }
 }

@@ -1,11 +1,14 @@
 # Load config
 $config = Get-Content -Raw -Path "./config.json" | ConvertFrom-Json
 
-# Ensure logs directory exists
-$logDir = Split-Path -Path $config.LogFile
-if (-not (Test-Path $logDir)) {
-    New-Item -ItemType Directory -Path $logDir | Out-Null
+# Create logs directory if it doesn't exist
+if (-not (Test-Path $config.LogPath)) {
+    New-Item -ItemType Directory -Path $config.LogPath | Out-Null
 }
+
+# Define log file as "out.HHmmss.log"
+$timestamp = Get-Date -Format "HHmmss"
+$logFile = Join-Path $config.LogPath "out.$timestamp.log"
 
 # Load helper script
 . "$PSScriptRoot/scripts/logging.ps1"
@@ -14,9 +17,9 @@ if (-not (Test-Path $logDir)) {
 . "$PSScriptRoot/scripts/clone-artifact-version-folder.ps1"
 . "$PSScriptRoot/scripts/copy-build-to-artifact.ps1"
 
-Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath
+Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath -LogFile $logFile
 
-Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
+Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath -LogFile $logFile
 
 Invoke-BuildFileExpansion -BuildPath $config.BuildPath -SevenZipPath $config.SevenZipPath
 
