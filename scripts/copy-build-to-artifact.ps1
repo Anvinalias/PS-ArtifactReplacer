@@ -60,6 +60,7 @@ function Copy-DatabaseFiles {
         #Check for home build folder (Exception)
         if ($appName -eq "Home") {
             Copy-HomeDatabaseFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
+            continue
         }
 
         $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory
