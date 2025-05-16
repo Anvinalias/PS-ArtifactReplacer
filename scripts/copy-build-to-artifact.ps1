@@ -24,11 +24,17 @@ function Copy-APIApplicationFiles {
 
             # Check if API-Application folder exists in the version folder
             if (Test-Path $apiAppPath) {
-                Write-Host "Copying from $apiAppPath to $targetPath"
+                # Log the short path for better readability
+                # Extract last 4 folders from source
+                $shortSource = ($apiAppPath -split '\\')[-4..-1] -join '\'
+                # Extract last 4 folders from target
+                $shortTarget = ($targetPath -split '\\')[-4..-1] -join '\'
+
+                Write-Log "Copying API Files from $shortSource to $shortTarget" $LogFile
                 Copy-Item -Path $apiAppPath\* -Destination $targetPath -Recurse -Force
             }
             else {
-                Write-Host "No API-Application folder found in version $($versionFolder.Name) for $($appFolder.Name)"
+                Write-Log "No API-Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile
             }
         }
     }
@@ -70,12 +76,18 @@ function Copy-DatabaseFiles {
                 if ($dbAppFolder) {
                     $sourcePath = $dbAppFolder.FullName
                     $destinationPath = Join-Path -Path $ArtifactPath -ChildPath "$appName\$TargetVersion\scripts"
+                    # Log the short path for better readability
+                    # Extract last 4 folders from source
+                    $shortSource = ($sourcePath -split '\\')[-4..-1] -join '\'
+                    # Extract last 4 folders from target
+                    $shortTarget = ($destinationPath -split '\\')[-4..-1] -join '\'
 
-                    Write-Host "Copying DB files from '$sourcePath' to '$destinationPath'" -ForegroundColor Cyan
+                    Write-Log "Copying DB Files from $shortSource to $shortTarget" $LogFile
+
                     robocopy $sourcePath $destinationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
                 }
                 else {
-                    Write-Host "No matching DB files found for '$appName' in $dbParentPath" -ForegroundColor Yellow
+                    Write-Log "No matching DB files found for '$appName' in $dbParentPath" $LogFile
                 }
             }
         }
@@ -103,11 +115,17 @@ function Copy-HomeDatabaseFiles {
         if (Test-Path $apiDbPath) {
             $destinationPath = Join-Path -Path $ArtifactPath -ChildPath "API-Application\$TargetVersion\scripts"
             
-            Write-Host "Copying API DB files from '$apiDbPath' to '$destinationPath'" -ForegroundColor Cyan
+            # Log the short path for better readability
+            # Extract last 4 folders from source
+            $shortSource = ($apiDbPath -split '\\')[-4..-1] -join '\'
+            # Extract last 4 folders from target
+            $shortTarget = ($destinationPath -split '\\')[-4..-1] -join '\'
+
+            Write-Log "Copying API DB Files from $shortSource to $shortTarget" $LogFile
             robocopy $apiDbPath $destinationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
         }
         else {
-            Write-Host "No 'API-Application' folder found in $($versionFolder.FullName)" -ForegroundColor Yellow
+            Write-Log "No 'API-Application' folder found in $($versionFolder.FullName)" $LogFile
         }
     }
 }
@@ -137,12 +155,18 @@ function Copy-ApplicationPageFiles {
             if (Test-Path $applicationBuildPath) {
 
                 $targetApplicationPath = Join-Path -Path $ArtifactPath -ChildPath "$appName\$TargetVersion\applicationPages"
+                # Log the short path for better readability
+                # Extract last 4 folders from source
+                $shortSource = ($applicationBuildPath -split '\\')[-4..-1] -join '\'
+                # Extract last 4 folders from target
+                $shortTarget = ($targetApplicationPath -split '\\')[-4..-1] -join '\'
 
-                Write-Host "Copying from $applicationBuildPath to $targetApplicationPath" -ForegroundColor Cyan
+                Write-Log "Copying Application Files from $shortSource to $shortTarget" $LogFile
+
                 robocopy $applicationBuildPath $targetApplicationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
             }
             else {
-                Write-Host "No Application folder found in version $($versionFolder.Name) for $($appFolder.Name)"
+                Write-Log "No Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile
             }
         }
     }
