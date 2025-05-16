@@ -13,7 +13,8 @@ function Remove-UnwantedFiles {
             try {
                 Remove-Item $filePath -Force
                 Write-Host "Deleted $file" -ForegroundColor Green
-            } catch {
+            }
+            catch {
                 Write-Host "Failed to delete $file : $_" -ForegroundColor Red
             }
         }
@@ -32,21 +33,22 @@ function Remove-OldHashFiles {
 
     $appFolders = Get-ChildItem -Path $BuildPath -Directory
 
-    foreach ($app in $appFolders) {
-        $hashFilePath = Join-Path -Path $ArtifactPath -ChildPath "$($app.Name)\1.0.0.0\hash-file.txt"
+    # Collect app names from BuildFiles
+    $appNames = $appFolders.Name
+
+    # Add API-Application to the list
+    $appNames += 'API-Application'
+
+    foreach ($appName in $appNames) {
+        $hashFilePath = Join-Path -Path $ArtifactPath -ChildPath "$appName\1.0.0.0\hash-file.txt"
 
         if (Test-Path $hashFilePath) {
-            Write-Host "`nHash file found: $hashFilePath" -ForegroundColor Cyan
-            $response = Read-Host "Do you want to delete this hash file? (Y/N)"
-            if ($response -in @("Y", "y")) {
-                try {
-                    Remove-Item $hashFilePath -Force
-                    Write-Host "Deleted hash file: $hashFilePath" -ForegroundColor Green
-                } catch {
-                    Write-Host "Failed to delete $hashFilePath : $_" -ForegroundColor Red
-                }
-            } else {
-                Write-Host "Skipped deletion of $hashFilePath" -ForegroundColor Yellow
+            try {
+                Remove-Item $hashFilePath -Force
+                Write-Host "Deleted hash file: $hashFilePath" -ForegroundColor Green
+            }
+            catch {
+                Write-Host "Failed to delete $hashFilePath : $_" -ForegroundColor Red
             }
         }
     }
