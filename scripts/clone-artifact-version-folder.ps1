@@ -40,7 +40,9 @@ function Update-VersionTxt {
         [string]$NewVersion
     )
     $versionFile = Join-Path $FolderPath "applicationPages\version.txt"
-    Write-Log "Updating version.txt in $FolderPath to $NewVersion" $LogFile
+    # Log short path for better readability
+    $shortPath = (Split-Path $FolderPath -Parent | Split-Path -Leaf) + "\" + (Split-Path $FolderPath -Leaf)
+    Write-Log "Updating version.txt content of $shortPath to $NewVersion" $LogFile
     #Modify version.txt to new version
     Set-Content -Path $versionFile -Value $NewVersion
 }
@@ -89,7 +91,10 @@ Function Invoke-ArtifactVersionClone {
 
         # Clone and update version.txt
         $targetVersionFolder = Copy-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
-        Write-Log "Cloned $sourceFolder to $targetVersionFolder" $LogFile
+        # Extract short folder names (last two folder) for source and target
+        $shortSource = (Split-Path $sourceFolder -Parent | Split-Path -Leaf) + "\" + (Split-Path $sourceFolder -Leaf)
+        $shortTarget = (Split-Path $targetVersionFolder -Parent | Split-Path -Leaf) + "\" + (Split-Path $targetVersionFolder -Leaf)
+        Write-Log "Cloned $shortSource to $shortTarget" $LogFile
         Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
     }   
 }
