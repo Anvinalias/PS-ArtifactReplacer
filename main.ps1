@@ -7,16 +7,16 @@ $config = Get-Content -Raw -Path "./config.json" | ConvertFrom-Json
 . "$PSScriptRoot/scripts/clone-artifact-version-folder.ps1"
 . "$PSScriptRoot/scripts/copy-build-to-artifact.ps1"
 
-# Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath
+Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath
 
-# Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
+Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath
 
-#Invoke-BuildFileExpansion -BuildPath $config.BuildPath -SevenZipPath $config.SevenZipPath
+Invoke-BuildFileExpansion -BuildPath $config.BuildPath -SevenZipPath $config.SevenZipPath
 
-#Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
+Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
 
-#Copy-APIApplicationFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
+Copy-APIApplicationFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
 
-#Copy-DatabaseFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
+Copy-DatabaseFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
 
 Copy-ApplicationPageFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
