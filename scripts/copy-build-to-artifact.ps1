@@ -112,3 +112,40 @@ function Copy-HomeDatabaseFiles {
     }
 }
 
+
+function Copy-ApplicationPageFiles {
+    param (
+        [Parameter(Mandatory)]
+        [string]$ArtifactPath,
+
+        [Parameter(Mandatory)]
+        [string]$BuildPath, 
+        
+        [Parameter(Mandatory)]
+        [string]$TargetVersion
+    )
+
+    $appFolders = Get-ChildItem -Path $BuildPath -Directory
+
+    foreach ($appFolder in $appFolders) {
+        $appName = $appFolder.Name
+        $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory
+
+        foreach ($versionFolder in $versionFolders) {
+            $applicationBuildPath = Join-Path -Path $versionFolder.FullName -ChildPath $appName
+
+            if (Test-Path $applicationBuildPath) {
+
+                $targetApplicationPath = Join-Path -Path $ArtifactPath -ChildPath "$appName\$TargetVersion\applicationPages"
+
+                Write-Host "Copying from $applicationBuildPath to $targetApplicationPath" -ForegroundColor Cyan
+                robocopy $applicationBuildPath $targetApplicationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
+            }
+            else {
+                Write-Host "No Application folder found in version $($versionFolder.Name) for $($appFolder.Name)"
+            }
+        }
+    }
+}
+
+
