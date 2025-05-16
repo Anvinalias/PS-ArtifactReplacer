@@ -40,7 +40,7 @@ function Update-VersionTxt {
         [string]$NewVersion
     )
     $versionFile = Join-Path $FolderPath "applicationPages\version.txt"
-    Write-Host "Updating version.txt in $FolderPath to $NewVersion" -ForegroundColor Green
+    Write-Log "Updating version.txt in $FolderPath to $NewVersion" $LogFile
     #Modify version.txt to new version
     Set-Content -Path $versionFile -Value $NewVersion
 }
@@ -60,38 +60,36 @@ Function Invoke-ArtifactVersionClone {
         [string]$TargetVersion
     )
 
-   # Get all app folders in the ArtifactPath
-$artifactAppFolders = Get-ChildItem -Path $ArtifactPath -Directory
-$buildAppFolders = Get-ChildItem -Path $BuildPath -Directory
-$buildAppNames = $buildAppFolders.Name
+    # Get all app folders in the ArtifactPath
+    $artifactAppFolders = Get-ChildItem -Path $ArtifactPath -Directory
+    $buildAppFolders = Get-ChildItem -Path $BuildPath -Directory
+    $buildAppNames = $buildAppFolders.Name
 
-foreach ($artifactApp in $artifactAppFolders) {
-    $appName = $artifactApp.Name
-    $sourceFolder = Join-Path $artifactApp.FullName $SourceVersion
+    foreach ($artifactApp in $artifactAppFolders) {
+        $appName = $artifactApp.Name
+        $sourceFolder = Join-Path $artifactApp.FullName $SourceVersion
 
-    # Skip if source version folder doesn't exist
-    if (-not (Test-Path $sourceFolder)) {
-        Write-Host "Skipping $appName : Source version folder not found" -ForegroundColor Yellow
-        continue
-    }
+        # Skip if source version folder doesn't exist
+        if (-not (Test-Path $sourceFolder)) {
+            Write-Log "Skipping $appName : Source version folder not found" $LogFile
+            continue
+        }
 
-    # Allow only if app exists in build or is API-Application
-    if ($appName -ne "API-Application" -and -not ($buildAppNames -contains $appName)) {
-        Write-Host "Skipping $appName : not found in BuildPath" -ForegroundColor Yellow
-        continue
-    }
+        # Allow only if app exists in build or is API-Application
+        if ($appName -ne "API-Application" -and -not ($buildAppNames -contains $appName)) {
+            Write-Log "Skipping $appName : not found in BuildPath" $LogFile
+            continue
+        }
 
-    # Ensure version.txt matches
-    if (-not (Test-VersionMatch -FolderPath $sourceFolder)) {
-        Write-Host "Skipping $appName : version.txt mismatch" -ForegroundColor Red
-        continue
-    }
+        # Ensure version.txt matches
+        if (-not (Test-VersionMatch -FolderPath $sourceFolder)) {
+            $actualVersion = Split-Path $sourceFolder -Leaf
+            Update-VersionTxt -FolderPath $sourceFolder -NewVersion $actualVersion
+        }
 
-    # Clone and update version.txt
-    $targetVersionFolder = Copy-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
-    Write-Host "Cloned $sourceFolder to $targetVersionFolder" -ForegroundColor Green
-    Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
-}
-
-    
+        # Clone and update version.txt
+        $targetVersionFolder = Copy-VersionFolder -SourceFolder $sourceFolder -NewVersion $TargetVersion
+        Write-Log "Cloned $sourceFolder to $targetVersionFolder" $LogFile
+        Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
+    }   
 }
