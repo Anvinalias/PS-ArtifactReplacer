@@ -36,12 +36,18 @@ function Expand-BuildFiles {
             # Unzip into destination folder using 7-Zip if available
             if ($use7Zip) {
                 & $SevenZipPath 'x' $zip.FullName "-o$destinationFolder" '-y' | Out-Null
-                Write-Log "Unzipped $($zip.Name) using 7-Zip to $destinationFolder" $LogFile
+
+                # Extract last 3 folders from destination folder path
+                $shortDest = ($destinationFolder -split '\\')[-3..-1] -join '\'
+                Write-Log "Unzipped $shortDest\$($zip.Name) using 7-Zip" $LogFile
             }
             # Fallback to Expand-Archive if 7-Zip is not available
             else {
                 Expand-Archive -Path $zip.FullName -DestinationPath $destinationFolder -Force
-                Write-Log "Unzipped $($zip.Name) using Expand-Archive to $destinationFolder" $LogFile
+
+                # Extract last 3 folders from destination folder path
+                $shortDest = ($destinationFolder -split '\\')[-3..-1] -join '\'
+                Write-Log "Unzipped $shortDest\$($zip.Name) using Expand-Archive" $LogFile
             }
 
         }
