@@ -3,6 +3,7 @@ Setup Instructions
 1. Config File Setup:
 - Rename 'config.example.json' to 'config.json'.
 - Open 'config.json' and update the required paths.
+- Create a log folder and provide it's path in config
 - Use double backslashes (\\) in all paths.
 - Example:
   "buildPath": "C:\\build\\yourpath"

@@ -23,6 +23,7 @@ The purpose of this project is:
    - Use the `config.example.json` file as a reference.
    - You can simply rename `config.example.json` to `config.json` and update the paths accordingly.
    - Make sure to use **double backslashes (`\\`)** for all file paths inside the JSON.
+   - Create a log folder and provide it's path in config
    - Example:
      ```json
      "buildPath": "C:\\build\\yourpath"
