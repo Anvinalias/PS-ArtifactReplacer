@@ -1,0 +1,27 @@
+Setup Instructions
+
+1. Config File Setup:
+- Rename 'config.example.json' to 'config.json'.
+- Open 'config.json' and update the required paths.
+- Use double backslashes (\\) in all paths.
+- Example:
+  "buildPath": "C:\\build\\yourpath"
+
+2. (Optional) 7-Zip Path:
+- If 7-Zip is installed, add its full path in the config.
+- This can significantly reduce unzip time.
+- Example:
+  "sevenZipPath": "C:\\Program Files\\7-Zip\\7z.exe"
+
+3. Do not change the following values:
+  "SourceVersion": "1.0.0.0",
+  "TargetVersion": "4.0.0.0"
+
+How to Run
+
+- After completing the config.json setup:
+  1. Open the 'PS-ArtifactReplacer' folder in PowerShell.
+  2. Run the script by typing:
+     .\main.ps1
+  3. Press enter and wait for the operations to be completed
+  4. Check Log file for details
