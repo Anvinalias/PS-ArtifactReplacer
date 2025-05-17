@@ -71,15 +71,15 @@ Function Invoke-ArtifactVersionClone {
         $appName = $artifactApp.Name
         $sourceFolder = Join-Path $artifactApp.FullName $SourceVersion
 
-        # Skip if source version folder doesn't exist
-        if (-not (Test-Path $sourceFolder)) {
-            Write-Log "Skipping $appName : Source version folder not found" $LogFile -Level "WARN"
-            continue
-        }
-
         # Allow only if app exists in build or is API-Application
         if ($appName -ne "API-Application" -and -not ($buildAppNames -contains $appName)) {
             Write-Log "Skipping $appName : not found in BuildPath" $LogFile -Level "WARN"
+            continue
+        }
+
+        # Skip if source version folder doesn't exist
+        if (-not (Test-Path $sourceFolder)) {
+            Write-Log "Skipping $appName : Source version folder not found" $LogFile -Level "WARN"
             continue
         }
 
