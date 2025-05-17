@@ -4,8 +4,21 @@ function Write-Log {
         [string]$Message,
 
         [Parameter(Mandatory = $true)]
-        [string]$LogFile
+        [string]$LogFile,
+
+        [ValidateSet("INFO", "WARN", "ERROR")]
+        [string]$Level = "INFO"
     )
+
     $timestamp = Get-Date -Format "dd-MM-yyyy HH:mm"
-    Add-Content -Path $LogFile -Value "$timestamp - $Message"
+    $logEntry = "$timestamp [$Level] - $Message"
+
+    switch ($Level) {
+        "INFO"  { Write-Host $logEntry -ForegroundColor White }
+        "WARN"  { Write-Host $logEntry -ForegroundColor Yellow }
+        "ERROR" { Write-Host $logEntry -ForegroundColor Red }
+    }
+
+    Write-Host $logEntry
+    Add-Content -Path $LogFile -Value $logEntry
 }
