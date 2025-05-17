@@ -11,15 +11,16 @@ function Write-Log {
     )
 
     $timestamp = Get-Date -Format "dd-MM-yyyy HH:mm"
-    $logEntry = "$timestamp [$Level] - $Message"
+    $logConsoleEntry = "[$Level] - $Message"
+    $logFileEntry = "$timestamp [$Level] - $Message"
 
     switch ($Level) {
-        "INFO"  { Write-Host $logEntry -ForegroundColor White }
-        "WARN"  { Write-Host $logEntry -ForegroundColor Yellow }
-        "ERROR" { Write-Host $logEntry -ForegroundColor Red }
+        "INFO"  { Write-Host $logConsoleEntry -ForegroundColor White }
+        "WARN"  { Write-Host $logConsoleEntry -ForegroundColor Yellow }
+        "ERROR" { Write-Host $logConsoleEntry -ForegroundColor Red }
     }
 
-    Add-Content -Path $LogFile -Value $logEntry
+    Add-Content -Path $LogFile -Value $logFileEntry
 }
 
 
