@@ -4,7 +4,10 @@ function Expand-BuildFiles {
         [string]$VersionFolderPath,
 
         [Parameter(Mandatory = $false)]
-        [string]$SevenZipPath
+        [string]$SevenZipPath,
+
+        [Parameter(Mandatory = $false)]
+        [bool]$Use7Zip
     )
     try {
         # Try to get all zip files 
@@ -13,15 +16,6 @@ function Expand-BuildFiles {
     catch {
         Write-Log "Error: Folder does not exist or couldn't read contents: $VersionFolderPath" $LogFile -Level "ERROR"
         return
-    }
-
-    $use7Zip = $false
-    if ($SevenZipPath -and (Test-Path $SevenZipPath) -and ($SevenZipPath -like '*.exe')) {
-        $use7Zip = $true
-    }
-    elseif ($SevenZipPath) {
-        Write-Host "Warning: 7-Zip executable not found at '$SevenZipPath'. Falling back to Expand-Archive." -ForegroundColor Yellow
-        Write-Log "7-Zip path invalid: '$SevenZipPath'. Falling back to Expand-Archive." $LogFile -Level "WARN"
     }
 
     foreach ($zip in $zipFiles) {
@@ -67,6 +61,16 @@ function Invoke-BuildFileExpansion {
         [Parameter(Mandatory = $false)]
         [string]$SevenZipPath
     )
+
+    # Check if 7-Zip path is valid to decide which method to use
+    # Default to Expand-Archive if 7-Zip is not available
+    $use7Zip = $false
+    if ($SevenZipPath -and (Test-Path $SevenZipPath) -and ($SevenZipPath -like '*7z.exe')) {
+        $use7Zip = $true
+    }
+    elseif ($SevenZipPath) {
+        Write-Log "7-Zip path invalid: '$SevenZipPath'. Falling back to Expand-Archive." $LogFile -Level "WARN"
+    }
     
     # Get all application folders under BuildPath
     $appFolders = Get-ChildItem -Path $BuildPath -Directory
@@ -77,7 +81,7 @@ function Invoke-BuildFileExpansion {
 
         foreach ($version in $versionFolders) {
             # Call Expand-BuildFiles function for each version folder
-            Expand-BuildFiles -VersionFolderPath $version.FullName -SevenZipPath $SevenZipPath
+            Expand-BuildFiles -VersionFolderPath $version.FullName -SevenZipPath $SevenZipPath -Use7Zip:$use7Zip
         }
     }
 
