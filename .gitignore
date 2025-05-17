@@ -1,6 +1,5 @@
 logs/
+*.exe
 *.log
 *.zip
-*.tmp
-*.bak
 config.json
