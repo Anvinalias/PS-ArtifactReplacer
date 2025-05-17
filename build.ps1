@@ -9,6 +9,6 @@ if (-not (Get-Command Invoke-ps2exe -ErrorAction SilentlyContinue)) {
 }
 
 # Compile the launcher into an EXE
-Invoke-ps2exe .\launcher.ps1 .\artifact-manager.exe -noConsole
+Invoke-ps2exe .\launcher.ps1 .\artifact-manager.exe
 
 Write-Host "Build complete." -ForegroundColor Green
