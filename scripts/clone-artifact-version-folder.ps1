@@ -42,7 +42,7 @@ function Update-VersionTxt {
     $versionFile = Join-Path $FolderPath "applicationPages\version.txt"
     # Log short path for better readability
     $shortPath = (Split-Path $FolderPath -Parent | Split-Path -Leaf) + "\" + (Split-Path $FolderPath -Leaf)
-    Write-Log "Updating version.txt content of $shortPath to $NewVersion" $LogFile
+    Write-Log "Updating version.txt content of $shortPath to $NewVersion" $LogFile -Level "INFO"
     #Modify version.txt to new version
     Set-Content -Path $versionFile -Value $NewVersion
 }
@@ -73,13 +73,13 @@ Function Invoke-ArtifactVersionClone {
 
         # Skip if source version folder doesn't exist
         if (-not (Test-Path $sourceFolder)) {
-            Write-Log "Skipping $appName : Source version folder not found" $LogFile
+            Write-Log "Skipping $appName : Source version folder not found" $LogFile -Level "WARN"
             continue
         }
 
         # Allow only if app exists in build or is API-Application
         if ($appName -ne "API-Application" -and -not ($buildAppNames -contains $appName)) {
-            Write-Log "Skipping $appName : not found in BuildPath" $LogFile
+            Write-Log "Skipping $appName : not found in BuildPath" $LogFile -Level "WARN"
             continue
         }
 
@@ -94,7 +94,7 @@ Function Invoke-ArtifactVersionClone {
         # Extract short folder names (last two folder) for source and target
         $shortSource = (Split-Path $sourceFolder -Parent | Split-Path -Leaf) + "\" + (Split-Path $sourceFolder -Leaf)
         $shortTarget = (Split-Path $targetVersionFolder -Parent | Split-Path -Leaf) + "\" + (Split-Path $targetVersionFolder -Leaf)
-        Write-Log "Cloned $shortSource to $shortTarget" $LogFile
+        Write-Log "Cloned $shortSource to $shortTarget" $LogFile -Level "INFO"
         Update-VersionTxt -FolderPath $targetVersionFolder -NewVersion $TargetVersion
     }   
 }

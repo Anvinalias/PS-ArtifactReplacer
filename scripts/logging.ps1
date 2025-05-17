@@ -19,7 +19,6 @@ function Write-Log {
         "ERROR" { Write-Host $logEntry -ForegroundColor Red }
     }
 
-    Write-Host $logEntry
     Add-Content -Path $LogFile -Value $logEntry
 }
 

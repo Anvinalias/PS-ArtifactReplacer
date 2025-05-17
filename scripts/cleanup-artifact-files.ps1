@@ -15,14 +15,14 @@ function Remove-UnwantedFiles {
         if (Test-Path $filePath) {
             try {
                 Remove-Item $filePath -Force
-                Write-Log "Deleted $file" $LogFile
+                Write-Log "Deleted $file" $LogFile -Level "INFO"
             }
             catch {
-                Write-Log "Failed to delete $file : $_" $LogFile
+                Write-Log "Failed to delete $file : $_" $LogFile -Level "ERROR"
             }
         }
         else {
-            Write-Log "$file not found" $LogFile
+            Write-Log "$file not found" $LogFile -Level "WARN"
         }
     }
 }
@@ -54,14 +54,14 @@ function Remove-OldHashFiles {
         if (Test-Path $hashFilePath) {
             try {
                 Remove-Item $hashFilePath -Force
-                Write-Log "Deleted hash file from $appName" $LogFile
+                Write-Log "Deleted hash file from $appName" $LogFile -Level "INFO"
             }
             catch {
-                Write-Log "Failed to delete from $appName : $_" $LogFile
+                Write-Log "Failed to delete from $appName : $_" $LogFile -Level "ERROR"
             }
         }
         else {
-            Write-Log "Hash file not found in $appName" $LogFile
+            Write-Log "Hash file not found in $appName" $LogFile -Level "WARN"
         }
     }
 }

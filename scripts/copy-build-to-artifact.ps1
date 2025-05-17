@@ -30,11 +30,11 @@ function Copy-APIApplicationFiles {
                 # Extract last 4 folders from target
                 $shortTarget = ($targetPath -split '\\')[-4..-1] -join '\'
 
-                Write-Log "Copying API Files from $shortSource to $shortTarget" $LogFile
+                Write-Log "Copying API Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
                 robocopy $apiAppPath\* $targetPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
             }
             else {
-                Write-Log "No API-Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile
+                Write-Log "No API-Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile -Level "WARN"
             }
         }
     }
@@ -83,12 +83,12 @@ function Copy-DatabaseFiles {
                     # Extract last 4 folders from target
                     $shortTarget = ($destinationPath -split '\\')[-4..-1] -join '\'
 
-                    Write-Log "Copying DB Files from $shortSource to $shortTarget" $LogFile
+                    Write-Log "Copying DB Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
 
                     robocopy $sourcePath $destinationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
                 }
                 else {
-                    Write-Log "No matching DB files found for '$appName' in $dbParentPath" $LogFile
+                    Write-Log "No matching DB files found for '$appName' in $dbParentPath" $LogFile -Level "WARN"
                 }
             }
         }
@@ -122,11 +122,11 @@ function Copy-HomeDatabaseFiles {
             # Extract last 4 folders from target
             $shortTarget = ($destinationPath -split '\\')[-4..-1] -join '\'
 
-            Write-Log "Copying API DB Files from $shortSource to $shortTarget" $LogFile
+            Write-Log "Copying API DB Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
             robocopy $apiDbPath $destinationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
         }
         else {
-            Write-Log "No 'API-Application' folder found in $($versionFolder.FullName)" $LogFile
+            Write-Log "No 'API-Application' folder found in $($versionFolder.FullName)" $LogFile -Level "WARN"
         }
     }
 }
@@ -162,12 +162,12 @@ function Copy-ApplicationPageFiles {
                 # Extract last 4 folders from target
                 $shortTarget = ($targetApplicationPath -split '\\')[-4..-1] -join '\'
 
-                Write-Log "Copying Application Files from $shortSource to $shortTarget" $LogFile
+                Write-Log "Copying Application Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
 
                 robocopy $applicationBuildPath $targetApplicationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
             }
             else {
-                Write-Log "No Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile
+                Write-Log "No Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile -Level "WARN"
             }
         }
     }

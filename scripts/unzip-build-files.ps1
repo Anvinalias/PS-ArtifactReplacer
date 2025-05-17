@@ -11,7 +11,7 @@ function Expand-BuildFiles {
         $zipFiles = Get-ChildItem -Path $VersionFolderPath -Filter *.zip -ErrorAction Stop
     }
     catch {
-        Write-Log "Error: Folder does not exist or couldn't read contents: $VersionFolderPath" $LogFile
+        Write-Log "Error: Folder does not exist or couldn't read contents: $VersionFolderPath" $LogFile -Level "ERROR"
         return
     }
 
@@ -21,7 +21,7 @@ function Expand-BuildFiles {
     }
     elseif ($SevenZipPath) {
         Write-Host "Warning: 7-Zip executable not found at '$SevenZipPath'. Falling back to Expand-Archive." -ForegroundColor Yellow
-        Write-Log "7-Zip path invalid: '$SevenZipPath'. Falling back to Expand-Archive." $LogFile
+        Write-Log "7-Zip path invalid: '$SevenZipPath'. Falling back to Expand-Archive." $LogFile -Level "WARN"
     }
 
     foreach ($zip in $zipFiles) {
@@ -39,7 +39,7 @@ function Expand-BuildFiles {
 
                 # Extract last 3 folders from destination folder path
                 $shortDest = ($destinationFolder -split '\\')[-3..-1] -join '\'
-                Write-Log "Unzipped $shortDest\$($zip.Name) using 7-Zip" $LogFile
+                Write-Log "Unzipped $shortDest\$($zip.Name) using 7-Zip" $LogFile -Level "INFO"
             }
             # Fallback to Expand-Archive if 7-Zip is not available
             else {
@@ -47,12 +47,12 @@ function Expand-BuildFiles {
 
                 # Extract last 3 folders from destination folder path
                 $shortDest = ($destinationFolder -split '\\')[-3..-1] -join '\'
-                Write-Log "Unzipped $shortDest\$($zip.Name) using Expand-Archive" $LogFile
+                Write-Log "Unzipped $shortDest\$($zip.Name) using Expand-Archive" $LogFile -Level "INFO"
             }
 
         }
         catch {
-            Write-Log "Failed to unzip $($zip.Name): $_" $LogFile
+            Write-Log "Failed to unzip $($zip.Name): $_" $LogFile -Level "ERROR"
         }
     
     }
