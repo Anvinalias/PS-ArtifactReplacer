@@ -17,16 +17,26 @@ $logFile = Join-Path $config.LogPath "out.$timestamp.log"
 . "$PSScriptRoot/scripts/clone-artifact-version-folder.ps1"
 . "$PSScriptRoot/scripts/copy-build-to-artifact.ps1"
 
-# Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath -LogFile $logFile
 
-# Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath -LogFile $logFile
+# ===== Main flow =====
 
-# Invoke-BuildFileExpansion -BuildPath $config.BuildPath -SevenZipPath $config.SevenZipPath
+Write-LogBanner -Title "REMOVING UNWANTED ARTIFACT FILES" -LogFile $LogFile
+Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath -LogFile $LogFile
 
-# Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
+Write-LogBanner -Title "REMOVING OLD HASH FILES" -LogFile $LogFile
+Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath -LogFile $LogFile
 
+Write-LogBanner -Title "UNZIPPING BUILD FILES" -LogFile $LogFile
+Invoke-BuildFileExpansion -BuildPath $config.BuildPath -SevenZipPath $config.SevenZipPath
+
+Write-LogBanner -Title "CLONING ARTIFACT VERSION FOLDERS" -LogFile $LogFile
+Invoke-ArtifactVersionClone -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -SourceVersion $config.SourceVersion -TargetVersion $config.TargetVersion
+
+Write-LogBanner -Title "COPYING API APPLICATION FILES" -LogFile $LogFile
 Copy-APIApplicationFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
 
+Write-LogBanner -Title "COPYING DATABASE SCRIPT FILES" -LogFile $LogFile
 Copy-DatabaseFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
 
+Write-LogBanner -Title "COPYING APPLICATION PAGE FILES" -LogFile $LogFile
 Copy-ApplicationPageFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
