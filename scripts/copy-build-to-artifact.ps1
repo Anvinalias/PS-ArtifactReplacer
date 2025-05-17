@@ -57,7 +57,7 @@ function Copy-DatabaseFiles {
     foreach ($appFolder in $appFolders) {
         $appName = $appFolder.Name
 
-        #Check for home build folder (Exception)
+        #Home database files are handled differently
         if ($appName -eq "Home") {
             Copy-HomeDatabaseFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
             continue
@@ -69,10 +69,9 @@ function Copy-DatabaseFiles {
             $dbParentPath = Join-Path -Path $versionFolder.FullName -ChildPath "Database"
 
             if (Test-Path $dbParentPath) {
-                # Find folder under Database that matches the app name (partially or fully)
-                $dbAppFolder = Get-ChildItem -Path $dbParentPath -Directory |
-                Where-Object { $_.Name -like "*$appName*" -or $appName -like "*$($_.Name)*" } |
-                Select-Object -First 1
+                
+                #calls to another function for verifying database file path
+                $dbAppFolder = Get-DatabaseSourceFolder -DatabasePath $dbParentPath -AppName $appName
 
                 if ($dbAppFolder) {
                     $sourcePath = $dbAppFolder.FullName
@@ -94,6 +93,35 @@ function Copy-DatabaseFiles {
         }
     }
 }
+
+function Get-DatabaseSourceFolder {
+    param (
+        [string]$DatabasePath,
+        [string]$AppName
+    )
+
+    if (-not (Test-Path $DatabasePath)) {
+        return $null
+    }
+
+    # Find folder under Database that matches the app name (partially or fully)
+    $match = Get-ChildItem -Path $DatabasePath -Directory |
+        Where-Object { $_.Name -like "*$AppName*" -or $AppName -like "*$($_.Name)*" } |
+        Select-Object -First 1
+
+    # Check for DB folders directly under Database
+    if (-not $match) {
+        $containsValidFolders = Get-ChildItem -Path $DatabasePath -Directory |
+            Where-Object { $_.Name -match 'Scripts|Functions|StoredProcedures' }
+
+        if ($containsValidFolders) {
+            return Get-Item $DatabasePath
+        }
+    }
+
+    return $match
+}
+
 
 function Copy-HomeDatabaseFiles {
     param (
