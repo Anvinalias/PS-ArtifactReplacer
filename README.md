@@ -22,12 +22,38 @@ The purpose of this project is:
 1. **Create a `config.json` file** in the root directory.
    - Use the `config.example.json` file as a reference.
    - You can simply rename `config.example.json` to `config.json` and update the paths accordingly.
+   - Make sure to use **double backslashes (`\\`)** for all file paths inside the JSON.
+   - Example:
+     ```json
+     "buildPath": "C:\\build\\yourpath"
+     ```
 
 2. **Specify 7-Zip path (optional but recommended):**
    - If you have 7-Zip installed, add its path in the config.
    - This can **significantly reduce unzip time**.
+   - Example:
+     ```json
+     "sevenZipPath": "C:\\Program Files\\7-Zip\\7z.exe"
+     ```
 
+3. **Do not change the following values** in the config file:
+   ```json
+   "SourceVersion": "1.0.0.0",
+   "TargetVersion": "4.0.0.0"
+   ```
 ---
+
+## 🏃 How to Run
+
+1. Open PowerShell and navigate to the `PS-ArtifactReplacer` folder.
+
+2. Ensure your `config.json` file is set up correctly.
+
+3. Run the main script by typing:
+
+   ```powershell
+   .\main.ps1
+   ```
 
 ## 🚀 Optimizations & Observations
 
@@ -40,7 +66,7 @@ The purpose of this project is:
 
 ---
 
-## 🧹 Useful Rollback Commands (for Debugging)
+## 🧹 Useful Rollback Commands that helped for Debugging
 
 ### 🔁 Delete a version folder (example: 4.0.0.0 cloned from 1.0.0.0)
 
