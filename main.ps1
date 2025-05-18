@@ -1,6 +1,30 @@
 # Load config
 $config = Get-Content -Raw -Path (Join-Path $PSScriptRoot 'config.json') | ConvertFrom-Json
 
+# Load helper script
+. "$PSScriptRoot/scripts/logging.ps1"
+. "$PSScriptRoot/scripts/unzip-build-files.ps1"
+. "$PSScriptRoot/scripts/cleanup-artifact-files.ps1"
+. "$PSScriptRoot/scripts/clone-artifact-version-folder.ps1"
+. "$PSScriptRoot/scripts/copy-build-to-artifact.ps1"
+
+# ===== Configuration validation =====
+function Test-ConfigurationPaths {
+    param ($Config)
+    
+    $requiredPaths = @(
+        @{Path = $Config.BuildPath; Name = "BuildPath" },
+        @{Path = $Config.ArtifactPath; Name = "ArtifactPath" },
+        @{Path = $Config.LogPath; Name = "LogPath" }
+    )
+
+    foreach ($item in $requiredPaths) {
+        if ([string]::IsNullOrEmpty($item.Path)) {
+            throw "Configuration Error: $($item.Name) cannot be empty"
+        }
+    }
+}
+
 # Create logs directory if it doesn't exist
 if (-not (Test-Path $config.LogPath)) {
     New-Item -ItemType Directory -Path $config.LogPath | Out-Null
@@ -10,15 +34,9 @@ if (-not (Test-Path $config.LogPath)) {
 $timestamp = Get-Date -Format "HHmmss"
 $logFile = Join-Path $config.LogPath "out.$timestamp.log"
 
-# Load helper script
-. "$PSScriptRoot/scripts/logging.ps1"
-. "$PSScriptRoot/scripts/unzip-build-files.ps1"
-. "$PSScriptRoot/scripts/cleanup-artifact-files.ps1"
-. "$PSScriptRoot/scripts/clone-artifact-version-folder.ps1"
-. "$PSScriptRoot/scripts/copy-build-to-artifact.ps1"
-
-
 # ===== Main flow =====
+
+Test-ConfigurationPaths $config
 
 Write-LogBanner -Title "REMOVING UNWANTED ARTIFACT FILES" -LogFile $LogFile
 Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath -LogFile $LogFile
