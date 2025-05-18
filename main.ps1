@@ -1,5 +1,5 @@
 # Load config
-$config = Get-Content -Raw -Path "./config.json" | ConvertFrom-Json
+$config = Get-Content -Raw -Path (Join-Path $PSScriptRoot 'config.json') | ConvertFrom-Json
 
 # Create logs directory if it doesn't exist
 if (-not (Test-Path $config.LogPath)) {
