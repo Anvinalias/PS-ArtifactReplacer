@@ -83,12 +83,11 @@ function Copy-DatabaseFiles {
                     $shortTarget = ($destinationPath -split '\\')[-4..-1] -join '\'
 
                     Write-Log "Copying DB Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
-
                     robocopy $sourcePath $destinationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
                 }
-                else {
-                    Write-Log "No matching DB files found for '$appName' in $dbParentPath" $LogFile -Level "WARN"
-                }
+            }
+            else {
+                Write-Log "No matching DB files found for '$appName' in $dbParentPath" $LogFile -Level "WARN"
             }
         }
     }
@@ -106,13 +105,13 @@ function Get-DatabaseSourceFolder {
 
     # Find folder under Database that matches the app name (partially or fully)
     $match = Get-ChildItem -Path $DatabasePath -Directory |
-        Where-Object { $_.Name -like "*$AppName*" -or $AppName -like "*$($_.Name)*" } |
-        Select-Object -First 1
+    Where-Object { $_.Name -like "*$AppName*" -or $AppName -like "*$($_.Name)*" } |
+    Select-Object -First 1
 
     # Check for DB folders directly under Database
     if (-not $match) {
         $containsValidFolders = Get-ChildItem -Path $DatabasePath -Directory |
-            Where-Object { $_.Name -match 'Scripts|Functions|StoredProcedures' }
+        Where-Object { $_.Name -match 'Scripts|Functions|StoredProcedures' }
 
         if ($containsValidFolders) {
             return Get-Item $DatabasePath
