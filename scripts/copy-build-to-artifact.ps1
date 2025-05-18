@@ -31,7 +31,7 @@ function Copy-APIApplicationFiles {
                 $shortTarget = ($targetPath -split '\\')[-4..-1] -join '\'
 
                 Write-Log "Copying API Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
-                robocopy $apiAppPath\* $targetPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
+                robocopy $apiAppPath $targetPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
             }
             else {
                 Write-Log "No API-Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile -Level "WARN"
