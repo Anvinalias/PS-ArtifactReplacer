@@ -1,3 +1,5 @@
+# Define shared robocopy options 
+$RobocopyOptions = @("/E", "/IS", "/IT", "/NFL", "/NDL", "/NJH", "/NJS", "/NP")
 function Copy-APIApplicationFiles {
     param (
         [Parameter(Mandatory)]
@@ -31,7 +33,7 @@ function Copy-APIApplicationFiles {
                 $shortTarget = ($targetPath -split '\\')[-4..-1] -join '\'
 
                 Write-Log "Copying API Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
-                robocopy $apiAppPath $targetPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
+                robocopy $apiAppPath $targetPath $RobocopyOptions | Out-Null
             }
             else {
                 Write-Log "No API-Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile -Level "WARN"
@@ -83,7 +85,7 @@ function Copy-DatabaseFiles {
                     $shortTarget = ($destinationPath -split '\\')[-4..-1] -join '\'
 
                     Write-Log "Copying DB Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
-                    robocopy $sourcePath $destinationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
+                    robocopy $sourcePath $destinationPath $RobocopyOptions | Out-Null
                 }
             }
             else {
@@ -150,7 +152,7 @@ function Copy-HomeDatabaseFiles {
             $shortTarget = ($destinationPath -split '\\')[-4..-1] -join '\'
 
             Write-Log "Copying API DB Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
-            robocopy $apiDbPath $destinationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
+            robocopy $apiDbPath $destinationPath $RobocopyOptions | Out-Null
         }
         else {
             Write-Log "No 'API-Application' folder found in $($versionFolder.FullName)" $LogFile -Level "WARN"
@@ -191,7 +193,7 @@ function Copy-ApplicationPageFiles {
 
                 Write-Log "Copying Application Files from $shortSource to $shortTarget" $LogFile -Level "INFO"
 
-                robocopy $applicationBuildPath $targetApplicationPath /E /IS /IT /NFL /NDL /NJH /NJS /NP | Out-Null
+                robocopy $applicationBuildPath $targetApplicationPath $RobocopyOptions | Out-Null
             }
             else {
                 Write-Log "No Application folder found in version $($versionFolder.Name) for $($appFolder.Name)" $LogFile -Level "WARN"
