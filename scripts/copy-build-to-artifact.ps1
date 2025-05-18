@@ -17,7 +17,7 @@ function Copy-APIApplicationFiles {
 
     foreach ($appFolder in $appFolders) {
         # Loop through version folders for each application
-        $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory
+        $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory | Sort-Object { [version]$_.Name }
 
         foreach ($versionFolder in $versionFolders) {
             $apiAppPath = Join-Path -Path $versionFolder.FullName -ChildPath "API-Application"
@@ -63,7 +63,7 @@ function Copy-DatabaseFiles {
             continue
         }
 
-        $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory
+        $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory | Sort-Object { [version]$_.Name }
 
         foreach ($versionFolder in $versionFolders) {
             $dbParentPath = Join-Path -Path $versionFolder.FullName -ChildPath "Database"
@@ -135,7 +135,7 @@ function Copy-HomeDatabaseFiles {
     )
 
     $HomeBuildPath = Join-Path -Path $BuildPath -ChildPath "Home"
-    $versionFolders = Get-ChildItem -Path $HomeBuildPath -Directory
+    $versionFolders = Get-ChildItem -Path $HomeBuildPath -Directory | Sort-Object { [version]$_.Name }
 
     foreach ($versionFolder in $versionFolders) {
         $apiDbPath = Join-Path -Path $versionFolder.FullName -ChildPath "Database\API-Application"
@@ -175,7 +175,7 @@ function Copy-ApplicationPageFiles {
 
     foreach ($appFolder in $appFolders) {
         $appName = $appFolder.Name
-        $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory
+        $versionFolders = Get-ChildItem -Path $appFolder.FullName -Directory | Sort-Object { [version]$_.Name }
 
         foreach ($versionFolder in $versionFolders) {
             $applicationBuildPath = Join-Path -Path $versionFolder.FullName -ChildPath $appName
