@@ -38,9 +38,6 @@ $logFile = Join-Path $config.LogPath "out.$timestamp.log"
 
 Test-ConfigurationPaths $config
 
-Write-LogBanner -Title "REMOVING UNWANTED ARTIFACT FILES" -LogFile $LogFile
-Remove-UnwantedFiles -ArtifactPath $config.ArtifactPath -LogFile $LogFile
-
 Write-LogBanner -Title "REMOVING OLD HASH FILES" -LogFile $LogFile
 Remove-OldHashFiles -BuildPath $config.BuildPath -ArtifactPath $config.ArtifactPath -LogFile $LogFile
 

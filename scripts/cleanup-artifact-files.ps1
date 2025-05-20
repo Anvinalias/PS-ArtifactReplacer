@@ -1,32 +1,3 @@
-# Function to remove unwanted files from the artifact path
-function Remove-UnwantedFiles {
-    param (
-        [Parameter(Mandatory = $true)]
-        [string]$ArtifactPath,
-
-        [Parameter(Mandatory = $true)]
-        [string]$LogFile
-    )
-
-    $filesToDelete = @("allAppList.txt", "allfilesdetails.txt", "uploadedversion.txt")
-
-    foreach ($file in $filesToDelete) {
-        $filePath = Join-Path $ArtifactPath $file
-        if (Test-Path $filePath) {
-            try {
-                Remove-Item $filePath -Force
-                Write-Log "Deleted $file" $LogFile -Level "INFO"
-            }
-            catch {
-                Write-Log "Failed to delete $file : $_" $LogFile -Level "ERROR"
-            }
-        }
-        else {
-            Write-Log "$file not found" $LogFile -Level "WARN"
-        }
-    }
-}
-
 # Function to remove old hash files if they exist
 function Remove-OldHashFiles {
     param (
