@@ -4,7 +4,7 @@ $config = Get-Content -Raw -Path (Join-Path $PSScriptRoot 'config.json') | Conve
 # Load helper script
 . "$PSScriptRoot/scripts/logging.ps1"
 . "$PSScriptRoot/scripts/unzip-build-files.ps1"
-. "$PSScriptRoot/scripts/cleanup-artifact-files.ps1"
+. "$PSScriptRoot/scripts/delete-artifact-hashfiles.ps1"
 . "$PSScriptRoot/scripts/clone-artifact-version-folder.ps1"
 . "$PSScriptRoot/scripts/copy-build-to-artifact.ps1"
 
