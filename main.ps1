@@ -1,3 +1,7 @@
+# Stop script execution when an error is raised
+$ErrorActionPreference = "Stop"
+
+try {
 # Load config
 $config = Get-Content -Raw -Path (Join-Path $PSScriptRoot 'config.json') | ConvertFrom-Json
 
@@ -55,3 +59,24 @@ Copy-DatabaseFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPa
 
 Write-LogBanner -Title "COPYING APPLICATION PAGE FILES" -LogFile $LogFile
 Copy-ApplicationPageFiles -ArtifactPath $config.ArtifactPath -BuildPath $config.BuildPath -TargetVersion $config.TargetVersion
+}
+catch {
+    # Extract error details
+    $errorMessage = $_.Exception.Message
+    $errorDetails = $_ | Out-String
+    $scriptName = if ($_.InvocationInfo) { $_.InvocationInfo.ScriptName } else { "Unknown script" }
+    $lineNumber = if ($_.InvocationInfo) { $_.InvocationInfo.ScriptLineNumber } else { "Unknown line" }
+
+    # Ensure $logFile exists, fallback if needed
+    if (-not $logFile) {
+        $logFile = Join-Path $PSScriptRoot "error.$(Get-Date -Format 'HHmmss').log"
+    }
+
+    # Log error information
+    Write-Log -Message "Script failed: $errorMessage" -LogFile $logFile -Level "ERROR"
+    Write-Log -Message "Location: $scriptName at line $lineNumber" -LogFile $logFile -Level "ERROR"
+    Write-Log -Message "Full error details:`n$errorDetails" -LogFile $logFile -Level "ERROR"
+
+    # Exit with error code
+    exit 1
+}
