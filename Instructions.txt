@@ -21,8 +21,8 @@ Setup Instructions
 How to Run
 
 - After completing the config.json setup:
-  1. Open the 'PS-ArtifactReplacer' folder in PowerShell.
-  2. Run the script by typing:
-     .\main.ps1
-  3. Press enter and wait for the operations to be completed
-  4. Check Log file for details
+  1. Just run the artifact-manager.bat
+  2. Press enter and wait for the operations to be completed
+  3. Check Log file for details
+
+
