@@ -46,15 +46,8 @@ The purpose of this project is:
 
 ## 🏃 How to Run
 
-1. Open PowerShell and navigate to the `PS-ArtifactReplacer` folder.
-
-2. Ensure your `config.json` file is set up correctly.
-
-3. Run the main script by typing:
-
-   ```powershell
-   .\main.ps1
-   ```
+1. Just run artifact-manager.bat
+2. Wait for the operation to be completed and check log file for details.
 
 ## 🚀 Optimizations & Observations
 
